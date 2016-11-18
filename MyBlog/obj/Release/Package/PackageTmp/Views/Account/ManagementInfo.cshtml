@@ -1,0 +1,182 @@
+﻿@model MyBlog.Models.Account
+
+@{
+    ViewBag.Title = "用户信息管理";
+}
+
+@section head{
+<style>
+    .managementinfo-container > dl > dd {
+        height: 34px;
+        margin-top: 16px;
+        margin-bottom: 16px;
+    }
+</style>
+}
+
+<h3 style="font-weight:bold;padding-top:12px;">管理</h3>
+<hr />
+
+<!--管理界面导航-->
+<div style="padding-bottom:16px;">
+    <ul class="nav nav-tabs">
+        <li><a href="/Account">文章管理</a></li>
+        <li class="active"><a href="/Account/ManagementInfo">个人信息管理</a></li>
+        <li><a href="/Account/ManagementWeb">网站信息管理</a></li>
+    </ul>
+</div>
+
+<div class="managementinfo-container">
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name, new { value = Model.Name, @class = "form-label" })
+            @Html.HiddenFor(model => model.Name, new { value = Model.Name, id="name" })
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Password)
+        </dt>
+
+        <dd style="cursor:pointer;">
+            <a>修改</a>
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DisplayName)
+        </dt>
+
+        <dd>
+            @Html.TextBoxFor(model => model.DisplayName, new { id = "displayname", value = Model.DisplayName, @class = "form-control" })
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.TextBoxFor(model => model.Description, new { id = "description", value = Model.Description, @class = "form-control" })
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.TextBoxFor(model => model.Email, new { id = "email", value = Model.Email, @class = "form-control" })
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GitHub)
+        </dt>
+
+        <dd>
+            @Html.TextBoxFor(model => model.GitHub, new { id = "github", value = Model.GitHub, @class = "form-control" })
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WeiBo)
+        </dt>
+
+        <dd>
+            @Html.TextBoxFor(model => model.WeiBo, new { id = "weibo", value = Model.WeiBo, @class = "form-control" })
+        </dd>
+
+    </dl>
+</div>
+
+<!-- 按钮触发模态框 -->
+<button class="btn btn-primary" data-toggle="modal" data-target="#myModal">修改</button>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">将被修改的信息</h4>
+            </div>
+            <div class="modal-body" id="myModalContent"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="myModalSubmit">提交更改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+@section script {
+<script>
+    $(function () {
+        // 保存初始用户信息
+        var displayname = $("#displayname").val();
+        var description = $("#description").val();
+        var email = $("#email").val();
+        var github = $("#github").val();
+        var weibo = $("#weibo").val();
+
+        $('#myModal').on('show.bs.modal',
+        function () {
+            // 对滚动条自适应处理
+            if (window.innerHeight >= document.documentElement.clientHeight)
+            {
+                $('#myModal').css('overflow-y', 'hidden');
+                $('body').css({
+                    'overflow': 'auto',
+                    'margin-right': '0'
+                })
+            }
+
+            var detail = "";
+            if (displayname != $("#displayname").val()) {
+                detail = detail + "昵称：<b style='color:#47a447'>" + displayname + "</b> -> <b style='color:#3276b1'>" + $("#displayname").val() + "</b><br />";
+            }
+            if (description != $("#description").val()) {
+                detail = detail + "描述：<b style='color:#47a447'>" + description + "</b> -> <b style='color:#3276b1'>" + $("#description").val() + "</b><br />";
+            }
+            if (email != $("#email").val()) {
+                detail = detail + "邮箱：<b style='color:#47a447'>" + email + "</b> -> <b style='color:#3276b1'>" + $("#email").val() + "</b><br />";
+            }
+            if (github != $("#github").val()) {
+                detail = detail + "GitHub：<b style='color:#47a447'>" + github + "</b> -> <b style='color:#3276b1'>" + $("#github").val() + "</b><br />";
+            }
+            if (weibo != $("#weibo").val()) {
+                detail = detail + "微博：<b style='color:#47a447'>" + weibo + "</b> -> <b style='color:#3276b1'>" + $("#weibo").val() + "</b><br />";
+            }
+            if (detail != ""){
+                $("#myModalContent").html(detail);
+                $("#myModalSubmit").show();
+                detail = "";
+            }
+            else {
+                $("#myModalContent").html("没有信息会被修改。O(∩_∩)O");
+                $("#myModalSubmit").hide();
+            }
+        })
+    });
+
+    $('#myModalSubmit').click(function () {
+        alert($("#name").val());
+        $.post("/Account/AlterInfo", {
+            name: $("#name").val(),
+            displayname: $("#displayname").val(),
+            password: $("#password").val(),
+            description: $("#description").val(),
+            email: $("#email").val(),
+            github: $("#github").val(),
+            weibo: $("#weibo").val()
+        }, function (data) {
+            alert("hello");
+            if(data.result == true){
+                alert("success");
+                window.location.reload();
+            }
+            else {
+                alert("fail");
+            }
+        }, "json");
+    });
+</script>
+}

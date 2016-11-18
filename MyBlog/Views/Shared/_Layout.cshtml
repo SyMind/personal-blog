@@ -1,0 +1,196 @@
+﻿
+@using MyBlog.Models
+
+@{ 
+    AccountRepository ar = new AccountRepository();
+    CategoryRepository cr = new CategoryRepository();
+
+    HttpCookie cookie = Request.Cookies["Account"];
+    bool IsLogin = false;
+    if (cookie!=null)
+    {
+        if (ar.ValidateAccount(cookie["Name"], cookie["Password"]) == AccountRepository.ValidateResult.Success)
+        {
+            IsLogin = true;
+        }
+    }
+
+    Account account = ar.GetAccountByName("dacong");
+
+    IEnumerable<Category> categories = cr.GetAllCategories();
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - 潘聪聪</title>
+    <meta name="keywords" content="潘聪聪的博客,潘聪聪,IT交流,IT技能,web前端开发,web后端开发,asp.net,C#,python,兴趣,微软" />
+    <meta name="description" content="潘聪聪的博客，asp.net程序开发萌新，web前端爱好者。" />
+    <link rel="icon" href="~/img/icon.ico">
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    @RenderSection("head", false)
+</head>
+<body>
+    <div id="blog-header" class="header">
+        <div class="main-nav">
+            <div class="main-nav-toggler">
+                <svg style="height:24px;width:24px;" viewBox="0 0 24 24"  id="main-nav-toggler">
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
+                </svg>
+                <a href="/Home/Index"><span>Coder</span></a>
+                <a class="main-nav-selection" title="文章" href="/Post/Research"><span style="font-size:13px;">文章</span></a>
+                <a class="main-nav-selection" title="关于" href="/Home/About"><span style="font-size:13px;">关于</span></a>
+                @if (IsLogin == true)
+                {
+                    <a href="/Account/Logout"><span style="float:right;font-size:12px;padding-right:16px;">注销</span></a>
+                    <a href="/Account"><span style="float:right;font-size:12px;">管理员已登陆</span></a>
+                }        
+            </div>
+            <!--汉堡菜单-->
+            <div class="left-nav">
+                <div class="left-nav-mask" id="left-nav-mask"></div>
+                <div class="left-nav-content" id="left-nav-content">
+                    <div class="main-nav-toggler" id="left-nav-content-toggler">
+                        <svg style="height:24px;width:24px;" viewBox="0 0 24 24"  id="left-nav-toggler">
+                            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
+                        </svg>
+                        <span>Coder</span>
+                    </div>
+                    <div class="left-nav-list">
+                        <ul>
+                            <li id="postbtn">
+                                <span style="padding-left:20px;padding-right:20px;" class="glyphicon glyphicon-book" aria-hidden="true"></span>
+                                <span>文章</span>
+                            </li>
+                            <li id="aboutbtn">
+                                <span style="padding-left:20px;padding-right:20px;" class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                <span>关于</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- /.header -->
+    <div class="clear-fix" style="padding-top:45px;"></div>
+    <div class="mobile-aboutme">
+        <div>
+            <a href="#" class="mobile-aboutme-info-img">
+                <img src="~/img/head.jpg" />
+            </a>
+        </div>
+        <p>@account.DisplayName</p>
+        <p>@account.Description</p>
+        <div class="btn-group custom-btn-group">
+            <button type="button" class="btn btn-primary">
+                <a href="@account.Email">
+                    Email
+                </a>
+            </button>
+            <button type="button" class="btn btn-success">
+                <a href="@account.GitHub">
+                    GitHub
+                </a>
+            </button>
+            <button type="button" class="btn btn-danger">
+                <a href="@account.WeiBo">
+                    微博
+                </a>
+            </button>
+        </div>
+    </div>
+
+    <div id="main-container" class="container">
+        <div class="row">
+            <div class="col-sm-8 blog-main">
+                @RenderBody()
+            </div>
+
+            <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+                <div class="sidebar-module sidebar-module-inset custom-sildebar-module">
+                    <h3 style="padding-top:12px;">关于</h3>
+                    <hr />
+                    <div>
+                        <a href="#" class="mobile-aboutme-info-img">
+                            <img src="~/img/head.jpg" />
+                        </a>
+                    </div>
+                    <p>@account.DisplayName</p>
+                    <p>@account.Description</p>
+                    <div class="btn-group custom-btn-group">
+                        <button type="button" class="btn btn-primary">
+                            <a href="@account.Email">
+                            Email
+                            </a>
+                        </button>
+                        <button type="button" class="btn btn-success" style="margin-left: 0px;">
+                            <a href="@account.GitHub">
+                                GitHub
+                            </a>
+                        </button>
+                        <button type="button" class="btn btn-danger" style="margin-left: 0px;">
+                            <a href="@account.WeiBo">
+                                微博
+                            </a>
+                        </button>
+                    </div>
+                </div>
+                <div class="sidebar-module">
+                    <div class="panel panel-default" style="border-radius:0;margin-top:16px;">
+                        <div class="panel-heading" style="border-radius:0;background-color:#00838f;color:#ffffff;font-weight:bold;">文章类型</div>
+                        <div class="panel-body">
+                            <div class="toptags-list">
+                                @foreach (var category in categories)
+                                {
+                                    <a class="toptags-list-item" href="/Post/Research?categoryId=@category.CategoryId">@category.Name</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-module">
+                    <div class="panel panel-default" style="border-radius:0;margin-top:34px;">
+                        <div class="panel-heading" style="border-radius:0;background-color:#00838f;color:#ffffff;font-weight:bold;">好友链接</div>
+                        <div class="panel-body">
+                            <ul class="list-unstyled friendlinklist">
+                                <li>
+                                    <div class="tilexsm">
+                                        <div class="tilexsm-image">
+                                            <i class="fa fa-globe"></i>
+                                        </div>
+
+                                        <div class="tilexsm-info">
+                                            <div class="tilexsm-title">
+                                                <a alt="nofollow" href="http://www.tpzsrx.cn/" target="_blank">
+                                                    赵猛的主页
+                                                </a>
+                                            </div>
+                                            <div class="tilexsm-subtitle">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.blog-sidebar -->
+        </div>
+    </div>
+
+    <div id="blog-footer" class="blog-footer">
+        <p>&copy; @DateTime.Now.Year - 潘聪聪</p>
+    </div>
+
+    <script src="~/scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/scripts/bootstrap.min.js"></script>
+    <script src="~/scripts/layout.js"></script>
+    <script src="~/scripts/jquery.validate.min.js"></script>
+    <script src="~/scripts/jquery.validate.unobtrusive.min.js"></script>
+    @RenderSection("Script",false)
+</body>
+</html>

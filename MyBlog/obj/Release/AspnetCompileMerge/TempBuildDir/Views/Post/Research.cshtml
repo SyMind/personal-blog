@@ -1,0 +1,101 @@
+﻿@using MyBlog.Models;
+
+@section style{
+<style>
+    .btn-group > .btn {
+        border-radius: 0;
+        width: auto;
+    }
+</style>
+}
+
+@model IEnumerable<MyBlog.Models.Post>
+
+@{
+    ViewBag.Title = "搜寻文章";
+
+    var cr = new CategoryRepository();
+    var Categories = cr.GetAllCategories();
+}
+
+<h3 style="font-weight:bold;padding-top:12px;margin-bottom:12px;">所有与"@(ViewBag.ResearchTag)"相关的文章<small>@(ViewBag.Number)项</small></h3>
+<hr>    
+
+<div class="container">
+    <div class="row" style="padding-top:12px;margin-bottom:12px;">
+        <div class="col-md-3 col-lg-2">
+            <label style="color:#00838f;padding-top:6px;">按类别搜索</label>
+        </div>
+        <div class="col-md-9 col-lg-10">
+            <div class="btn-group" id="tag-container">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        添加
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        @foreach (var category in Categories)
+                        {
+                            <li><a tag="@category.CategoryId" class="add-tag">@category.Name</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PostTime)
+            </th>
+        </tr>
+    </thead>
+    
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <a href="/Home/ReadPost?articalId=@item.ArticalId">@Html.DisplayFor(modelItem => item.Title)</a>
+</td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PostTime)
+            </td>
+        </tr>
+    }
+    </tbody>
+
+</table>
+
+@section script{
+<script>
+    // 类型管理
+    var addbtns = document.getElementsByClassName("add-tag");
+    var tagcontainer = document.getElementById("tag-container");
+
+    for (var i = 0; i < addbtns.length; i++) {
+        addbtns[i].onclick = function (e) {
+            e.preventDefault();
+            var newTagItem = document.createElement('button');
+            newTagItem.setAttribute("class", "btn btn-default tag-item");
+            newTagItem.setAttribute("tag", this.getAttribute("tag"));
+            newTagItem.setAttribute("type", "button");
+            newTagItem.innerHTML = this.innerHTML;
+            this.style.display = "none";
+            var addbtn = this;
+            // 点击tag按钮删除自己
+            newTagItem.onclick = function () {
+                addbtn.style.display = "block";
+                $(this).remove();
+            };
+            tagcontainer.appendChild(newTagItem);
+        }
+    }
+</script>
+}

@@ -1,0 +1,62 @@
+﻿
+@model MyBlog.Models.AccountLogin
+
+@{
+    ViewBag.Title = "管理员登陆";
+}
+
+@using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    <h3 style="font-weight:bold;padding-top:12px;">管理员登陆</h3>
+    <hr />
+    <div class="form-group">
+        <div class="col-sm-3">
+            @Html.LabelFor(model => model.Name, new { @class = "label-control" })
+        </div>
+        <div class="col-sm-4">
+            @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-3">
+            @Html.LabelFor(model => model.Password, new { @class = "label-control" })
+        </div>
+        <div class="col-sm-4">
+            @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-3">
+            @Html.LabelFor(model => model.VerificationCode, new { @class = "label-control" })
+        </div>
+        <div class="col-sm-4">
+            @Html.TextBoxFor(model => model.VerificationCode, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.VerificationCode, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-3 col-sm-offset-3">
+            <img id="verificationcode" alt="" src="@Url.Action("VerificationCode","Account")" />
+            <a id="changebtn" style="cursor: pointer">换一张</a>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-3">
+            <input type="submit" class="btn btn-default" value="登录" />
+        </div>
+    </div>
+}
+
+@section script {
+<script type="text/javascript">
+    var changebtn = document.getElementById("changebtn");
+    var verificationcode = document.getElementById("verificationcode");
+    changebtn.onclick = function (e) {
+        verificationcode.setAttribute("src", "/Account/VerificationCode?" + new Date());
+    }
+</script>
+}
+

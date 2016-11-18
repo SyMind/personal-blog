@@ -1,0 +1,133 @@
+﻿
+@using MyBlog.Models;
+
+@model IEnumerable<MyBlog.Models.Post>
+
+@{
+    ViewBag.Title = "文章管理";
+
+    CategoryRepository cr = new CategoryRepository();
+}
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">操作结果</h4>
+            </div>
+            <div id="myModalBody" class="modal-body"></div>
+            <div class="modal-footer">
+                <button id="modal-close" type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<h3 style="font-weight:bold;padding-top:12px;">管理</h3>
+<hr />
+
+<div style="padding-bottom:16px;">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#">文章管理</a></li>
+        <li><a href="/Account/ManagementInfo">个人信息管理</a></li>
+        <li><a href="/Account/ManagementWeb">网站信息管理</a></li>
+    </ul>
+</div>
+
+<p>
+    <a href="/Post/Create">写文章</a>
+</p>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CategoryId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PostTime)
+                </th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @{ 
+                            var categories = item.CategoryId.Split(';');
+                        }
+                        @for (int i = 0; i < categories.Length - 1; i++)
+                        {
+                            @(cr.GetCategoryName(int.Parse(categories[i]))+";")
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PostTime)
+                    </td>
+                    <td>
+                        @Html.ActionLink("编辑", "Edit", "Post", new { id = item.ArticalId }, null) |
+                        @Html.ActionLink("详情", "Details", "Post", new { id = item.ArticalId }, null) |
+                        @Html.ActionLink("删除", "Delete", "Post", new { id = item.ArticalId }, new { @class = "table-delete-btn" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<nav>
+    <ul class="pager">
+        <li><a href="#">上一页</a></li>
+        <li><a href="#">下一页</a></li>
+    </ul>
+</nav>
+
+@section script {
+    <script>
+        var myModalBody = document.getElementById("myModalBody");
+
+        var btns = document.getElementsByClassName("table-delete-btn");
+
+        $('#myModal').on('hide.bs.modal', function () {
+            window.location.href = "/Account";
+        })
+
+        for (var i = 0; i < btns.length; i++){
+            btns[i].onclick = function (e) {
+                e.preventDefault();
+
+                // 等待响应
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", this.href, true);
+                xhr.send();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            var jsonobj = JSON.parse(xhr.responseText);
+                            if (jsonobj.Result === true) {
+                                myModalBody.innerHTML = '成功删除文章(￣▽￣)"';
+                                $('#myModal').modal('show');
+                            } else {
+                                myModalBody.innerHTML = '删除文章失败';
+                                $('#myModal').modal('show');
+
+                            }
+                        } else {
+                            myModalBody.innerHTML = '删除文章失败';
+                            $('#myModal').modal('show');
+                        }
+                    }
+                };
+            }
+        }
+    </script>
+}

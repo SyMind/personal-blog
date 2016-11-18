@@ -1,0 +1,95 @@
+﻿@using MyBlog.Models
+
+@model MyBlog.Models.HomeView
+
+@{
+    ViewBag.Title = "首页";
+
+    var cr = new CategoryRepository();
+    var pr = new PostRepository();
+}
+
+<style>
+.post-category-tags {
+    padding-top:12px;
+    cursor:pointer;
+}
+.post-category-tag {
+    box-sizing:border-box;
+    padding:5px 10px;
+    margin-right:10px;
+    background-color:#00838f;
+    font-size:12px;
+    color:#ffffff;
+}
+.post-category-tag:hover {
+    opacity: 0.54;
+    color:#ffffff;
+    text-decoration:none;
+}
+</style>
+
+<h3 style="font-weight:bold;padding-top:12px;">最近发表<small>@(pr.GetPostsNumber())项</small></h3>
+<hr>     
+@foreach (var post in Model.posts)
+{
+    <div class="blog-post">   
+        <h3 class="blog-post-title"><a href="/Home/ReadPost?articalId=@post.ArticalId">@post.Title</a></h3>
+        <p class="blog-post-meta">@post.PostTime.ToString("yyyy/MM/dd")</p>
+        @if (post.ContentTxt.Length > 200)
+        {
+            @post.ContentTxt.Substring(0, 200) <span>... ...</span>
+        }
+        else
+        {
+            @post.ContentTxt
+        }
+        <div class="post-category-tags">
+            @{ 
+                var categories = post.CategoryId.Split(';');
+            }
+            @for (int i = 0; i < categories.Length - 1; i++)
+            {
+                <a class="post-category-tag" href="/Post/Research?categoryId=@categories[i]">@cr.GetCategoryName(int.Parse(categories[i]))</a>
+            }
+        </div>   
+    </div><!-- /.blog-post -->
+    <hr>
+}
+<nav>
+    <ul class="pager">
+        @if (Model.PageIndex > 0)
+        {
+            <li><a href="/Home/Index?pageIndex=@(Model.PageIndex - 1)">上一页</a></li>
+        }
+        else
+        {
+            <li class="disabled"><a href="#">上一页</a></li>
+        }
+
+        @for (var i = 0; i <= Model.PageNumber; i++)
+        {
+            if (i == Model.PageIndex)
+            {
+                <li class="disabled"><a href="/Home/Index?pageIndex=@i">@(i + 1)</a></li>
+            }
+            else
+            {
+                <li><a href="/Home/Index?pageIndex=@i">@(i + 1)</a></li>
+            }
+
+        }
+
+        @if (Model.PageIndex < Model.PageNumber)
+        {
+            <li><a href="/Home/Index?pageIndex=@(Model.PageIndex + 1)">下一页</a></li>
+        }
+        else
+        {
+            <li class="disabled"><a href="#">下一页</a></li>
+        }
+    </ul>
+</nav>
+    
+
+

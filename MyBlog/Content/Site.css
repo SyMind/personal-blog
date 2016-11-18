@@ -1,0 +1,228 @@
+﻿* {
+    margin: 0px;
+    font-family: "Microsoft YaHei","Segoe UI","Arial";
+}
+
+body {
+    box-sizing: border-box;
+}
+
+.header {
+    background-color: #00838f;
+    color: #222222;
+    height: 46px;
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+    box-sizing: inherit;
+}
+.main-nav {
+    padding-right: 8px;
+}
+
+.main-nav svg {
+    width: 24px;
+    height: 24px;
+    fill: rgb(255, 255, 255);
+    display: inline-block;
+    position: relative;
+    top: 6px;
+    left: 15px;
+    cursor:pointer;
+}
+.main-nav span {
+    color: rgb(255, 255, 255);
+    display: inline-block;
+    padding-left: 30px;
+    font-weight: 500;
+    line-height: 46px;
+    font-size:20px;
+}
+
+.footer {
+    background-color: #00838F;
+    box-sizing: border-box;
+    height: 46px;
+    width: 100%;
+    position: fixed;
+    right: 0px;
+    bottom: 0px;
+}
+
+.left-nav-list {
+    color:#ffffff;
+    width:100%;   
+    padding-top:16px;                  
+}
+.left-nav-list ul {
+    padding:0px;
+}
+.left-nav-list li {
+    width:100%;
+    display:block;
+    height:48px;
+    list-style:none;
+    cursor:pointer;
+}
+.left-nav-list li:hover {
+    background-color:dimgray;
+}
+.left-nav-list span {
+    display:inline-block;
+    font-weight:500;
+    font-size:13px;
+    height:48px;
+    line-height:48px;
+    padding-left: 6px;
+}
+.left-nav-mask {
+    background-color: #000000;
+    opacity: 0.6;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 1200;
+    display: none;
+}
+
+.left-nav-content {
+    background-color: rgb(48, 48, 48);
+    width: 256px;
+    z-index: 1200;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    transform: translate(-266px, 0px);
+}
+
+.left-nav-content-hide {
+    animation: hide 0.3s ease-out;
+    -moz-animation: hide 0.3s ease-out;	/* Firefox */
+    -webkit-animation: hide 0.3s ease-outr;	/* Safari 和 Chrome */
+    -o-animation: hide 0.3s ease-out;	/* Opera */
+}
+
+.left-nav-content-show {
+    animation: show 0.2s ease-out;
+    -moz-animation: show 0.2s ease-out;	/* Firefox */
+    -webkit-animation: show 0.2s ease-out;	/* Safari 和 Chrome */
+    -o-animation: show 0.2s ease-out;	/* Opera */
+}
+
+@keyframes hide
+{
+    from {transform: translate(0px, 0px);}
+    to {transform: translate(-266px, 0px);}
+}
+
+@keyframes show
+{
+    from {transform: translate(-266px, 0px);}
+    to {transform: translate(0px, 0px);}
+}
+
+.mobile-aboutme {
+    background-color: #eee;
+    box-sizing: border-box;
+    width: 100%;
+    height: 142px;
+    padding: 15px;
+}
+.mobile-aboutme-info-img img {
+    width: 60px;
+    height: 60px;
+}
+.mobile-aboutme-info-img {
+    float: left;
+    display: block;
+    padding-right: 10px;
+}
+
+.mobile-aboutme-info-text {
+    display: table-cell;
+    box-sizing: border-box;
+}
+.mobile-aboutme-info-text > h4 {
+    font-weight: 500;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+    line-height: 20px;
+    font-size: 18px;
+}
+
+.mobile-aboutme-info-text span {
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.blog-footer {
+    background-color: #f9f9f9;
+    border-top: 1px solid #e5e5e5;
+    padding: 15px 0px;
+}
+
+.blog-footer > p{
+    text-align: center;
+}
+
+.btn-group > .btn {
+    border-radius: 0;
+    width: 87px;
+}
+
+.btn-group > .btn > a {
+    color: #ffffff;
+}
+
+.custom-btn-group {
+    padding: 15px 0px 20px 0px;
+}
+.mobile-aboutme {
+    width: 100%;
+    display: none;
+}
+
+@media screen and (max-width: 800px) {
+    .mobile-aboutme {
+        width: 100%;
+        display: block;
+    }
+    .custom-sildebar-module {
+        display: none;
+    }
+    .main-nav-selection {
+        display: none;
+    }
+}
+
+@media screen and (min-width:800px) {
+    .main-nav-toggler>svg {
+        display: none;
+    }
+}
+
+.blog-post-title a {
+    color:#00838f;
+    font-weight:bold;
+}
+.blog-post-title a:hover {
+    opacity:0.54;
+    text-decoration:none;
+}
+
+.toptags-list-item {
+            display:inline-block;
+            padding:5px 10px;
+            margin-right:10px;
+            margin-bottom:10px;
+            background-color:#00838f;
+            box-sizing:border-box;
+            text-decoration:none;
+            color:#ffffff;
+        }
+        .toptags-list-item:hover {
+            opacity: 0.54;
+            color:#ffffff;
+            text-decoration:none;
+        }

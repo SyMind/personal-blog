@@ -1,0 +1,99 @@
+﻿@using MyBlog.Models;
+
+@section head{
+<style>
+    .btn-group > .btn {
+        border-radius: 0;
+        width: auto;
+    }
+</style>
+}
+
+@model IEnumerable<MyBlog.Models.Post>
+
+@{
+    ViewBag.Title = "搜寻文章";
+
+    var cr = new CategoryRepository();
+    var Categories = cr.GetAllCategories();
+}
+
+<h3 style="font-weight:bold;padding-top:12px;margin-bottom:12px;">所有与"@(ViewBag.ResearchTag)"相关的文章<small>@(ViewBag.Number)项</small></h3>
+<hr>    
+
+<div class="container">
+    <div class="row" style="padding-top:12px;margin-bottom:12px;">
+        <div class="col-md-3 col-lg-2">
+            <label style="color:#00838f;padding-top:6px;">按类别搜索</label>
+        </div>
+        <div class="col-md-7 col-lg-8">
+            <div class="btn-group">
+                <div class="btn-group">
+                    <button id="dropdown-show" style="width:160px;" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        请点击选择类型
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        @foreach (var category in Categories)
+                        {
+                            <li><a tag="@category.CategoryId" class="add-tag">@category.Name</a></li>
+                        }
+                    </ul>
+                </div>
+                <button type="button" class="btn btn-default" id="researchbtn">搜索</button>
+                <input id="dropdown-buff" type="hidden" value="-1" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PostTime)
+            </th>
+        </tr>
+    </thead>
+    
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <a href="/Home/ReadPost?articalId=@item.ArticalId">@Html.DisplayFor(modelItem => item.Title)</a>
+</td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PostTime)
+            </td>
+        </tr>
+    }
+    </tbody>
+
+</table>
+
+@section script{
+<script>
+    // 类型管理
+    var addbtns = document.getElementsByClassName("add-tag");
+    var tagcontainer = document.getElementById("tag-container");
+    var researchbtn = document.getElementById("researchbtn");
+    var show = document.getElementById("dropdown-show");
+    var buff = document.getElementById("dropdown-buff");
+
+    for (var i = 0; i < addbtns.length; i++) {
+        addbtns[i].onclick = function (e) {
+            e.preventDefault();
+            show.innerHTML = this.innerHTML;
+            buff.value = this.getAttribute("tag");
+        }
+    }
+
+    researchbtn.onclick = function () {
+        window.location.href = "/Post/Research?categoryId=" + buff.value;
+    };
+</script>
+}

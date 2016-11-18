@@ -1,0 +1,27 @@
+﻿
+@model MyBlog.Models.Post
+
+@{
+    ViewBag.Title = "ReadPost";
+}
+
+<style>
+    .pulish-info {
+        padding:5px;
+        background-color:#eee;
+        font-size:12px;
+    }
+    .pulish-info > span {
+        line-height:16px;
+        height:16px;
+    }
+</style>
+<div class="col-sm-12 blog-main">
+    <h3 style="font-weight:bold;padding-top:12px;">@Model.Title</h3>
+    <hr />
+    <div class="pulish-info">
+        <span>发表日期：@Model.PostTime.ToString("yyyy/MM/dd")</span>
+    </div>
+    <br /><br />
+    @Html.Raw(Model.Content.Replace("&#39;", "'"))
+</div>

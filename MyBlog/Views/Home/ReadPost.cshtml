@@ -1,0 +1,43 @@
+﻿
+@model MyBlog.Models.Post
+
+@{
+    ViewBag.Title = Model.Title;
+}
+
+@section head{
+<style>
+    .pulish-info {
+        padding: 5px;
+        background-color: #eee;
+        font-size: 12px;
+    }
+
+    .pulish-info > span {
+        line-height: 16px;
+        height: 16px;
+    }
+</style> 
+<script src="~/Content/ueditor/third-party/SyntaxHighlighter/shCore.js" type="text/javascript"></script>
+<script src="~/Content/ueditor/third-party/SyntaxHighlighter/shBrushCSharp.js" type="text/javascript"></script>
+<script src="~/Content/ueditor/third-party/SyntaxHighlighter/shBrushPython.js" type="text/javascript"></script>
+    
+<link href="~/Content/ueditor/third-party/SyntaxHighlighter/shCoreEclipse.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript">SyntaxHighlighter.all()</script>
+}
+
+<div>
+    <h3 style="font-weight:bold;padding-top:12px;">@Model.Title</h3>
+    <hr />
+    <div class="pulish-info">
+        <span>发表日期：@Model.PostTime.ToString("yyyy/MM/dd")</span>
+    </div>
+    <p>
+        <br /><br />
+    </p>
+    @Html.Raw(Model.Content.Replace("&#39;", "'"))
+</div>
+
+@section script{
+    
+}

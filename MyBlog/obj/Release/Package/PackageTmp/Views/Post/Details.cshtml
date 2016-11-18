@@ -1,0 +1,61 @@
+﻿
+@using MyBlog.Models
+
+@model MyBlog.Models.Post
+
+@{
+    ViewBag.Title = "Details";
+
+    CategoryRepository cr = new CategoryRepository();
+}
+
+<h3 style="font-weight:bold;padding-top:12px;">详情</h3>
+<hr />
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CategoryId)
+        </dt>
+
+        <dd>
+            @cr.GetCategoryName(Model.CategoryId)
+        </dd> 
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ContentTxt)
+        </dt>
+
+        <dd>
+            @if(Model.ContentTxt.Length>100)
+            {
+                @Model.ContentTxt.Substring(0, 100)
+            }
+            else
+            {
+                @Model.ContentTxt
+            }
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PostTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PostTime)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("编辑", "Edit", "Post", new { id = Model.ArticalId }, null) |
+    @Html.ActionLink("返回", "", "Account", null, null)
+</p>
